@@ -18,7 +18,10 @@ import {
   Award,
   BookOpen,
   ChevronLeft,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react-native";
+import { useState } from "react";
 
 const { width } = Dimensions.get("window");
 
@@ -27,6 +30,7 @@ export default function CourseDetail() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const [expandedLesson, setExpandedLesson] = useState(null);
 
   const course = COURSES.find((c) => c.id === id);
 
@@ -43,6 +47,14 @@ export default function CourseDetail() {
       </View>
     );
   }
+
+  const toggleLesson = (lessonId) => {
+    if (expandedLesson === lessonId) {
+      setExpandedLesson(null);
+    } else {
+      setExpandedLesson(lessonId);
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -96,7 +108,7 @@ export default function CourseDetail() {
             <View style={styles.infoItem}>
               <BookOpen size={18} color={colors.icon} />
               <Text style={[styles.infoText, { color: colors.icon }]}>
-                12 Lessons
+                {course.lessons ? course.lessons.length : 0} Lessons
               </Text>
             </View>
             <View style={styles.infoItem}>
@@ -125,30 +137,56 @@ export default function CourseDetail() {
           <Text style={[styles.sectionHeader, { color: colors.text }]}>
             Curriculum
           </Text>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <TouchableOpacity
-              key={item}
-              style={[
-                styles.lessonItem,
-                { backgroundColor: colors.card, borderColor: colors.border },
-              ]}
-            >
-              <View style={styles.lessonLeft}>
-                <Text style={[styles.lessonNum, { color: colors.icon }]}>
-                  {item}
-                </Text>
-                <View>
-                  <Text style={[styles.lessonTitle, { color: colors.text }]}>
-                    Introduction to the topic
-                  </Text>
-                  <Text style={[styles.lessonDuration, { color: colors.icon }]}>
-                    15 mins
-                  </Text>
+          {(course.lessons || []).map((lesson, index) => {
+            const isExpanded = expandedLesson === lesson.id;
+            return (
+              <TouchableOpacity
+                key={lesson.id}
+                style={[
+                  styles.lessonItem,
+                  { backgroundColor: colors.card, borderColor: colors.border },
+                ]}
+                onPress={() => toggleLesson(lesson.id)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.lessonHeader}>
+                  <View style={styles.lessonLeft}>
+                    <Text style={[styles.lessonNum, { color: colors.icon }]}>
+                      {String(index + 1).padStart(2, "0")}
+                    </Text>
+                    <View style={styles.lessonInfo}>
+                      <Text
+                        style={[styles.lessonTitle, { color: colors.text }]}
+                        numberOfLines={1}
+                      >
+                        {lesson.title}
+                      </Text>
+                      <Text
+                        style={[styles.lessonDuration, { color: colors.icon }]}
+                      >
+                        {lesson.duration}
+                      </Text>
+                    </View>
+                  </View>
+                  {isExpanded ? (
+                    <ChevronUp size={20} color={colors.icon} />
+                  ) : (
+                    <ChevronDown size={20} color={colors.icon} />
+                  )}
                 </View>
-              </View>
-              <PlayCircle size={20} color={colors.tint} />
-            </TouchableOpacity>
-          ))}
+
+                {isExpanded && (
+                  <View style={styles.lessonSummaryContainer}>
+                    <Text
+                      style={[styles.lessonSummary, { color: colors.icon }]}
+                    >
+                      {lesson.summary}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </ScrollView>
 
@@ -164,6 +202,7 @@ export default function CourseDetail() {
             Total Price
           </Text>
           <Text style={[styles.footerPrice, { color: colors.text }]}>
+            {" "}
             {course.price}
           </Text>
         </View>
@@ -277,23 +316,31 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   lessonItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
     marginBottom: 10,
+    overflow: "hidden", // Helps with animation if we added it
+  },
+  lessonHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   lessonLeft: {
     flexDirection: "row",
     alignItems: "center",
     gap: 16,
+    flex: 1,
   },
   lessonNum: {
     fontSize: 16,
     fontWeight: "bold",
     width: 20,
+  },
+  lessonInfo: {
+    flex: 1,
+    paddingRight: 10,
   },
   lessonTitle: {
     fontSize: 15,
@@ -302,6 +349,16 @@ const styles = StyleSheet.create({
   },
   lessonDuration: {
     fontSize: 12,
+  },
+  lessonSummaryContainer: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(0,0,0,0.05)",
+  },
+  lessonSummary: {
+    fontSize: 14,
+    lineHeight: 20,
   },
   footer: {
     position: "absolute",
