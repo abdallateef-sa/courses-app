@@ -1,0 +1,274 @@
+import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Colors } from '../../constants/Colors';
+import { useColorScheme } from 'react-native';
+import { COURSES } from '../../constants/Data';
+import { Ionicons } from '@expo/vector-icons';
+import { PlayCircle, Clock, Award, BookOpen, ChevronLeft } from 'lucide-react-native';
+
+const { width } = Dimensions.get('window');
+
+export default function CourseDetail() {
+  const { id } = useLocalSearchParams();
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
+  
+  const course = COURSES.find(c => c.id === id);
+
+  if (!course) {
+    return (
+        <View style={[styles.container, styles.center, { backgroundColor: colors.background }]}>
+            <Text style={{ color: colors.text }}>Course not found</Text>
+        </View>
+    );
+  }
+
+  return (
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Header / Cover */}
+            <View style={styles.imageContainer}>
+                <Image source={{ uri: course.image }} style={styles.image} />
+                <TouchableOpacity 
+                    style={styles.backButton} 
+                    onPress={() => router.back()}
+                >
+                    <ChevronLeft size={24} color="#FFF" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.playButton} activeOpacity={0.8}>
+                     <PlayCircle size={60} color="#FFF" fill="rgba(0,0,0,0.5)" />
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.content}>
+                <Text style={[styles.title, { color: colors.text }]}>{course.title}</Text>
+                
+                <View style={styles.metaContainer}>
+                    <View style={styles.badge}>
+                        <Text style={styles.badgeText}>Best Seller</Text>
+                    </View>
+                    <View style={styles.ratingRow}>
+                        <Ionicons name="star" size={16} color="#FBBF24" />
+                        <Text style={[styles.ratingText, { color: colors.icon }]}>{course.rating} ({course.reviews} reviews)</Text>
+                    </View>
+                </View>
+
+                <Text style={[styles.instructor, { color: colors.icon }]}>Created by {course.instructor}</Text>
+
+                <View style={styles.infoRow}>
+                    <View style={styles.infoItem}>
+                        <Clock size={18} color={colors.icon} />
+                        <Text style={[styles.infoText, { color: colors.icon }]}>24h Total</Text>
+                    </View>
+                     <View style={styles.infoItem}>
+                        <BookOpen size={18} color={colors.icon} />
+                        <Text style={[styles.infoText, { color: colors.icon }]}>12 Lessons</Text>
+                    </View>
+                     <View style={styles.infoItem}>
+                        <Award size={18} color={colors.icon} />
+                        <Text style={[styles.infoText, { color: colors.icon }]}>Certificate</Text>
+                    </View>
+                </View>
+                
+                <View style={styles.divider} />
+
+                <Text style={[styles.sectionHeader, { color: colors.text }]}>Description</Text>
+                <Text style={[styles.description, { color: colors.icon }]}>
+                    {course.description}
+                    {'\n\n'}
+                    By the end of this course you will master the skills needed to build professional applications. We cover everything from basics to advanced topics.
+                </Text>
+
+                <View style={[styles.divider, { backgroundColor: colors.border }]} />
+
+                 <Text style={[styles.sectionHeader, { color: colors.text }]}>Curriculum</Text>
+                 {[1, 2, 3, 4, 5].map((item) => (
+                    <TouchableOpacity key={item} style={[styles.lessonItem, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                        <View style={styles.lessonLeft}>
+                            <Text style={[styles.lessonNum, { color: colors.icon }]}>{item}</Text>
+                            <View>
+                                <Text style={[styles.lessonTitle, { color: colors.text }]}>Introduction to the topic</Text>
+                                <Text style={[styles.lessonDuration, { color: colors.icon }]}>15 mins</Text>
+                            </View>
+                        </View>
+                        <PlayCircle size={20} color={colors.tint} />
+                    </TouchableOpacity>
+                 ))}
+
+            </View>
+      </ScrollView>
+
+      {/* Bottom Bar */}
+      <View style={[styles.footer, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
+        <View>
+            <Text style={[styles.priceLabel, { color: colors.icon }]}>Total Price</Text>
+            <Text style={[styles.footerPrice, { color: colors.text }]}>{course.price}</Text>
+        </View>
+        <TouchableOpacity style={[styles.enrollButton, { backgroundColor: colors.tint }]}>
+            <Text style={styles.enrollText}>Enroll Now</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    width: width,
+    height: 250,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    opacity: 0.7,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  playButton: {
+    position: 'absolute',
+  },
+  content: {
+    padding: 20,
+    paddingBottom: 100,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  metaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  badge: {
+    backgroundColor: '#FDE047',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginRight: 10,
+  },
+  badgeText: {
+    color: '#000',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ratingText: {
+    marginLeft: 5,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  instructor: {
+    fontSize: 14,
+    marginBottom: 20,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    padding: 16,
+    borderRadius: 12,
+  },
+  infoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  infoText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#E5E7EB',
+    marginVertical: 24,
+  },
+  sectionHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  description: {
+    fontSize: 15,
+    lineHeight: 24,
+  },
+  lessonItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  lessonLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  lessonNum: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    width: 20,
+  },
+  lessonTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  lessonDuration: {
+    fontSize: 12,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderTopWidth: 1,
+    paddingBottom: 30, // Safe area
+  },
+  priceLabel: {
+    fontSize: 12,
+  },
+  footerPrice: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  enrollButton: {
+    paddingHorizontal: 32,
+    paddingVertical: 14,
+    borderRadius: 50,
+  },
+  enrollText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
