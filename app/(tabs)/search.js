@@ -1,7 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/Colors';
 import { useColorScheme } from 'react-native';
+import { Search } from 'lucide-react-native';
+
+const RECENT_SEARCHES = [
+  'React Native',
+  'Python',
+  'UI/UX Design',
+  'Digital Marketing',
+  'Data Science',
+];
 
 export default function SearchScreen() {
   const colorScheme = useColorScheme();
@@ -9,8 +18,29 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.center}>
-        <Text style={[styles.text, { color: colors.text }]}>Search Courses</Text>
+      <View style={styles.header}>
+        <Text style={[styles.title, { color: colors.text }]}>Search Courses</Text>
+      </View>
+      <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
+        <Search size={20} color={colors.icon} />
+        <TextInput
+          style={[styles.searchInput, { color: colors.text }]}
+          placeholder="Search for courses..."
+          placeholderTextColor={colors.icon}
+        />
+      </View>
+
+      <View style={styles.recentSearchesContainer}>
+        <Text style={[styles.recentSearchesTitle, { color: colors.text }]}>Recent Searches</Text>
+        <FlatList
+          data={RECENT_SEARCHES}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.recentSearchItem}>
+              <Text style={[styles.recentSearchText, { color: colors.text }]}>{item}</Text>
+            </TouchableOpacity>
+          )}
+        />
       </View>
     </SafeAreaView>
   );
@@ -20,13 +50,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  header: {
+    paddingHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 20,
   },
-  text: {
-    fontSize: 20,
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  searchInput: {
+    flex: 1,
+    marginLeft: 12,
+    height: 50,
+    fontSize: 16,
+  },
+  recentSearchesContainer: {
+    marginTop: 24,
+    paddingHorizontal: 20,
+  },
+  recentSearchesTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  recentSearchItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
+  },
+  recentSearchText: {
+    fontSize: 16,
   },
 });
