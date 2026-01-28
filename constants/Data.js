@@ -176,3 +176,60 @@ export const COURSES = [
 ];
 
 export const CATEGORIES = ['All', 'Development', 'Data Science', 'Design', 'Marketing', 'Photography', 'Business'];
+
+export const INSTRUCTORS = [
+  {
+    id: 'all',
+    name: 'All',
+    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=800&auto=format&fit=crop&q=60', // Placeholder for "All"
+    specialty: 'All Instructors'
+  },
+  {
+    id: '1',
+    name: 'Ahmed Ali',
+    image: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Development'
+  },
+  {
+    id: '2',
+    name: 'Sarah Smith',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Data Science'
+  },
+  {
+    id: '3',
+    name: 'John Doe',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Marketing'
+  },
+  {
+    id: '4',
+    name: 'Jessica Lee',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Design'
+  },
+  {
+    id: '5',
+    name: 'Michael Brown',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Photography'
+  },
+  {
+    id: '6',
+    name: 'David Wilson',
+    image: 'https://images.unsplash.com/photo-1521119989659-a83eee488058?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Business'
+  },
+  {
+    id: '7',
+    name: 'Emily Chen',
+    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Development'
+  },
+    {
+    id: '8',
+    name: 'Omar Hassan',
+    image: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=400&auto=format&fit=crop&q=60',
+    specialty: 'Design'
+  }
+];

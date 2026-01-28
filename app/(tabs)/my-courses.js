@@ -12,11 +12,13 @@ import { useColorScheme } from "react-native";
 import { COURSES } from "../../constants/Data";
 import { useRouter } from "expo-router";
 import { Star } from "lucide-react-native";
+import { useLanguage } from "../../utils/LanguageContext";
 
 export default function MyCoursesScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
   const router = useRouter();
+  const { t } = useLanguage();
 
   const renderCourse = ({ item }) => (
     <TouchableOpacity
@@ -58,8 +60,9 @@ export default function MyCoursesScreen() {
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
+      edges={['top', 'left', 'right']}
     >
-      <Text style={[styles.header, { color: colors.text }]}>My Learning</Text>
+      <Text style={[styles.header, { color: colors.text }]}>{t('myCourses')}</Text>
       <FlatList
         data={COURSES.slice(0, 2)}
         keyExtractor={(item) => item.id}

@@ -13,9 +13,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Colors } from "../../constants/Colors";
 import { useColorScheme } from "react-native";
-import { COURSES, CATEGORIES } from "../../constants/Data";
+import { COURSES, CATEGORIES, INSTRUCTORS } from "../../constants/Data";
 import { Star, Bell, Search } from "lucide-react-native";
 import { useState } from "react";
+import { useLanguage } from "../../utils/LanguageContext";
 
 const { width } = Dimensions.get("window");
 
@@ -24,20 +25,23 @@ export default function HomeScreen() {
     const colorScheme = useColorScheme();
     const colors = Colors[colorScheme ?? "light"];
     const [activeCategory, setActiveCategory] = useState("All");
+    const [activeInstructor, setActiveInstructor] = useState("all");
+    const { t } = useLanguage();
 
-    const filteredCourses =
-        activeCategory === "All"
-            ? COURSES
-            : COURSES.filter((c) => c.category === activeCategory);
+    const filteredCourses = COURSES.filter((c) => {
+        const categoryMatch = activeCategory === "All" || c.category === activeCategory;
+        const instructorMatch = activeInstructor === "all" || c.instructor === INSTRUCTORS.find(i => i.id === activeInstructor)?.name;
+        return categoryMatch && instructorMatch;
+    });
 
     const renderHeader = () => (
         <View style={styles.header}>
             <View>
                 <Text style={[styles.greeting, { color: colors.text }]}>
-                    Hello, Student 👋
+                    {t('hello')}, Student 👋
                 </Text>
                 <Text style={[styles.subtitle, { color: colors.icon }]}>
-                    Let's start learning
+                    {t('letsStartLearning')}
                 </Text>
             </View>
             <TouchableOpacity
@@ -56,11 +60,11 @@ export default function HomeScreen() {
             style={styles.banner}
         >
             <View style={styles.bannerContent}>
-                <Text style={styles.bannerTitle}>Summer Sale!</Text>
-                <Text style={styles.bannerText}>Get 50% off on all courses</Text>
+                <Text style={styles.bannerTitle}>{t('summerSale')}</Text>
+                <Text style={styles.bannerText}>{t('getDiscount')}</Text>
                 <TouchableOpacity style={styles.bannerButton}>
                     <Text style={[styles.bannerButtonText, { color: colors.tint }]}>
-                        Browse Now
+                        {t('browseNow')}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -83,7 +87,10 @@ export default function HomeScreen() {
             {CATEGORIES.map((cat, index) => (
                 <TouchableOpacity
                     key={index}
-                    onPress={() => setActiveCategory(cat)}
+                    onPress={() => {
+                        setActiveCategory(cat);
+                        setActiveInstructor("all"); // Reset instructor when category changes
+                    }}
                     style={[
                         styles.categoryChip,
                         {
@@ -100,11 +107,65 @@ export default function HomeScreen() {
                             { color: activeCategory === cat ? "#FFF" : colors.text },
                         ]}
                     >
-                        {cat}
+                        {cat === "All" ? t('all') : cat}
                     </Text>
                 </TouchableOpacity>
             ))}
         </ScrollView>
+    );
+
+    const renderInstructors = () => (
+        <View style={styles.instructorsSection}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                {t('instructors')}
+            </Text>
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 20 }}
+            >
+                {INSTRUCTORS.map((instructor) => (
+                    <TouchableOpacity
+                        key={instructor.id}
+                        onPress={() => {
+                            setActiveInstructor(instructor.id);
+                            setActiveCategory("All"); // Reset category when instructor changes
+                        }}
+                        style={styles.instructorItem}
+                    >
+                        <View
+                            style={[
+                                styles.instructorImageContainer,
+                                activeInstructor === instructor.id && {
+                                    borderColor: colors.tint,
+                                    borderWidth: 2,
+                                },
+                            ]}
+                        >
+                            <Image
+                                source={{ uri: instructor.image }}
+                                style={styles.instructorImage}
+                            />
+                        </View>
+                        <Text
+                            style={[
+                                styles.instructorName,
+                                {
+                                    color:
+                                        activeInstructor === instructor.id
+                                            ? colors.tint
+                                            : colors.text,
+                                    fontWeight:
+                                        activeInstructor === instructor.id ? "bold" : "normal",
+                                },
+                            ]}
+                        >
+                            {instructor.id === "all" ? t('all') : instructor.name}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        </View>
     );
 
     const renderCourse = ({ item }) => (
@@ -147,15 +208,17 @@ export default function HomeScreen() {
     return (
         <SafeAreaView
             style={[styles.container, { backgroundColor: colors.background }]}
+            edges={['top', 'left', 'right']}
         >
             <FlatList
                 ListHeaderComponent={
                     <>
                         {renderHeader()}
                         {renderBanner()}
+                        {renderInstructors()}
                         {renderCategories()}
                         <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                            Featured Courses
+                            {t('featuredCourses')}
                         </Text>
                     </>
                 }
@@ -303,5 +366,31 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textDecorationLine: "line-through",
         marginLeft: 8,
+    },
+    instructorsSection: {
+        marginBottom: 24,
+    },
+    instructorItem: {
+        alignItems: "center",
+        marginRight: 20,
+        width: 70,
+    },
+    instructorImageContainer: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        overflow: "hidden",
+        marginBottom: 8,
+        backgroundColor: "#f0f0f0",
+    },
+    instructorImage: {
+        width: "100%",
+        height: "100%",
+        resizeMode: "cover",
+    },
+    instructorName: {
+        fontSize: 12,
+        textAlign: "center",
+        lineHeight: 16,
     },
 });

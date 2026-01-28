@@ -2,10 +2,12 @@ import { Tabs } from 'expo-router';
 import { useColorScheme, Platform } from 'react-native';
 import { Home, Search, PlayCircle, User } from 'lucide-react-native';
 import { Colors } from '../../constants/Colors';
+import { useLanguage } from '../../utils/LanguageContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const { t } = useLanguage();
 
   return (
     <Tabs
@@ -31,28 +33,28 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Featured',
+          title: t('tabFeatured'),
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: t('tabSearch'),
           tabBarIcon: ({ color }) => <Search size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="my-courses"
         options={{
-          title: 'My Learning',
+          title: t('tabMyLearning'),
           tabBarIcon: ({ color }) => <PlayCircle size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Account',
+          title: t('tabAccount'),
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
         }}
       />

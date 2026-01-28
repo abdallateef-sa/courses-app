@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/Colors';
 import { useColorScheme } from 'react-native';
 import { Search } from 'lucide-react-native';
+import { useLanguage } from '../../utils/LanguageContext';
 
 const RECENT_SEARCHES = [
   'React Native',
@@ -15,23 +16,24 @@ const RECENT_SEARCHES = [
 export default function SearchScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const { t } = useLanguage();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>Search Courses</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('searchCourses')}</Text>
       </View>
       <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
         <Search size={20} color={colors.icon} />
         <TextInput
           style={[styles.searchInput, { color: colors.text }]}
-          placeholder="Search for courses..."
+          placeholder={t('searchPlaceholder')}
           placeholderTextColor={colors.icon}
         />
       </View>
 
       <View style={styles.recentSearchesContainer}>
-        <Text style={[styles.recentSearchesTitle, { color: colors.text }]}>Recent Searches</Text>
+        <Text style={[styles.recentSearchesTitle, { color: colors.text }]}>{t('recentSearches')}</Text>
         <FlatList
           data={RECENT_SEARCHES}
           keyExtractor={(item) => item}
