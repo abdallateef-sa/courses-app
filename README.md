@@ -7,28 +7,29 @@ A React Native application built with Expo.
 Before you begin, ensure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (version 18 or newer)
-- [pnpm](https://pnpm.io/) - Fast, disk space efficient package manager
 - [Expo Go](https://expo.dev/client) app on your mobile device (available on iOS App Store and Google Play Store)
 
-### Installing pnpm
+### Installing bun
 
-If you don't have pnpm installed:
+If you don't have bun installed:
 
 ```bash
-npm install -g pnpm
+npm install -g bun
 ```
 
 ## Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <your-repository-url>
 cd <your-project-name>
 ```
 
 2. Install dependencies:
+
 ```bash
-pnpm install
+bun install
 ```
 
 ## Running the App
@@ -36,7 +37,7 @@ pnpm install
 ### Start the Development Server
 
 ```bash
-pnpm start
+bun start
 ```
 
 This will start the Metro bundler and display a QR code in your terminal.
@@ -57,17 +58,17 @@ This will start the Metro bundler and display a QR code in your terminal.
 
 ### Available Scripts
 
-- **Start development server**: `pnpm start`
-- **Open on Android**: `pnpm android` (opens on Android device/emulator)
-- **Open on iOS**: `pnpm ios` (opens on iOS simulator - Mac only)
-- **Open in web browser**: `pnpm web`
+- **Start development server**: `bun start`
+- **Open on Android**: `bun android` (opens on Android device/emulator)
+- **Open on iOS**: `bun ios` (opens on iOS simulator - Mac only)
+- **Open in web browser**: `bun web`
 
 ### Alternative Methods to Open on Device
 
 If QR code scanning doesn't work:
 
 - Press `s` in the terminal to sign in to your Expo account and access the project from the Expo Go app
-- Use the direct scripts: `pnpm android` or `pnpm ios`
+- Use the direct scripts: `bun android` or `bun ios`
 
 ### Keyboard Shortcuts in Terminal
 
@@ -85,29 +86,30 @@ When the dev server is running:
 ### App won't load on device
 
 - Ensure your computer and mobile device are on the same Wi-Fi network
-- Try restarting the Metro bundler: `pnpm start --clear`
+- Try restarting the Metro bundler: `bun start --clear`
 - Check your firewall settings aren't blocking connections
 
 ### "Unable to resolve module"
 
 Clear the cache and reinstall:
+
 ```bash
 rm -rf node_modules
-pnpm install
-pnpm start --clear
+bun install
+bun start --clear
 ```
 
 ### Slow loading or performance issues
 
 - Close other apps on your device
 - Restart the Expo Go app
-- Try clearing the cache: `pnpm start --clear`
+- Try clearing the cache: `bun start --clear`
 
 ### QR code not working
 
 - Manually enter the URL shown in terminal into Expo Go app
 - Sign in to Expo and access project from your account
-- Use the direct commands: `pnpm android` or `pnpm ios`
+- Use the direct commands: `bun android` or `bun ios`
 
 ## Project Structure
 
